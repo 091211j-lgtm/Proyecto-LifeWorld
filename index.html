@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="theme-color" content="#000">
+    <link rel="icon" href="icon.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <title>TotalLifeWorld</title>
+    <style>
+        * {
+            shape-rendering: pixelated;
+        }
+        body {
+            background-color: black; 
+            margin: 0; 
+            overflow: hidden; 
+            
+        }
+        #dialogueBox {
+            color: #ffffff; 
+            position: absolute; 
+            right: 10px; 
+            left: 212px;
+            font-size: 30px;
+            font-family: sans-serif;
+            background-color: rgba(6,0,202,0.759);
+            border: 2px solid rgba(0,0,0,0.813);
+            border-radius: 2px;
+            bottom: 0px;
+        }
+        canvas {
+            padding: 0px; 
+            display: block;
+            margin: auto; 
+            background: #333; 
+            image-rendering: optimizeSpeed;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -o-crisp-edges;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: optimize-contrast;
+            image-rendering: pixelated;
+            -ms-interpolation-mode: nearest-neighbor;
+        }
+        #items {
+            background-color: rgba(56,31,0,0.800);
+            border: 1px solid rgba(0,0,0,0.887);
+            top: 30px;
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            right: 30px;
+            border-radius: 2px;
+        }
+        #inventory {
+            position: absolute;
+            background-color: rgba(52,19,0,0.927);
+            border: 3px solid rgba(0,0,0,0.927);
+            border-radius: 2px;
+            top: 10px;
+            right: 10px;
+            left: 10px;
+            bottom: 10px;
+        }
+        #menu {
+            position: absolute;
+            background-color: rgba(52,19,0,0.927);
+            border: 3px solid rgba(0,0,0,0.927);
+            border-radius: 2px;
+            color: white;
+            top: 10px;
+            right: 50px;
+            left: 50px;
+            bottom: 10px;
+        }
+        #craft, #chets, #coock {
+            background-color: rgba(56,31,0,0.800);
+            border: 1px solid rgba(0,0,0,0.887);
+            top: 30px;
+            bottom: 30px;
+            position: absolute;
+            left: 30px;
+            right: 365px;
+            border-radius: 2px;
+        }
+        .item {
+            border: 2px solid black;
+            border-radius: 2px;
+            background-color: rgb(68,27,0);
+            padding: 10px;
+            width: 32px;
+            height: 32px;
+            img {
+                width: 32px;
+                height: 32px;
+            }
+        }
+        .itemSelected {
+            border: 2px solid red;
+            border-radius: 2px;
+            background-color: rgba(192,0,0,0.808);
+            padding: 10px;
+            width: 32px;
+            height: 32px;
+            img {
+                width: 32px;
+                height: 32px;
+            }
+        }
+        #inventoryButton {
+            position: absolute;
+            top: 36px;
+            width: 32px;
+            height: 32px;
+        }
+        #itemSelectedDisplay {
+            position: absolute;
+            top: 10px;
+            left: calc(50% - 16px);
+            right: calc(50% - 16px);
+            border: 2px solid rgba(123,45,12,0.808);
+            border-radius: 2px;
+            background-color: rgba(110,52,27,0.808);
+            height: 32px;
+            width: 32px;
+            img {
+                width: 32px;
+                height: 32px;
+            }
+        }
+        #menuButton {
+            position: absolute;
+            top: 82px;
+            width: 32px;
+            height: 32px;
+        }
+        .control {
+            position: absolute;
+            width: 64px;
+            height: 64px;
+        }
+        #right {
+            bottom:64px;
+            left: 0px;
+        }
+        #down {
+            bottom:0px;
+            left: 64px;
+        }
+        #left {
+            bottom:64px;
+            left: 128px;
+        }
+        #up {
+            bottom: 128px;
+            left: 64px;
+        }
+        #attack {
+            bottom:64px;
+            left:64px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="914" height="420"></canvas>
+    <div id="controls">
+        <img src="assets/sprites/icons/right.png" class="control" id="right">
+        <img src="assets/sprites/icons/left.png" class="control" id="left">
+        <img src="assets/sprites/icons/up.png" class="control" id="up">
+        <img src="assets/sprites/icons/down.png" class="control" id="down">
+        <img src="assets/sprites/icons/attack.png" class="control" id="attack">
+    </div>
+    <div id="inventory" style="display: none;">
+
+        <div id="items" style="display: none;">
+            
+        </div>
+        <div id="craft" style="display: none;">
+            
+        </div>
+        <div id="coock" style="display: none;">
+            
+        </div>
+        <div id="chest" style="display: none;">
+            
+        </div>
+    </div>
+    
+    <div id="itemSelectedDisplay"></div>
+    <img id="menuButton" onclick="inventory.openClose()" src="assets/sprites/icons/inventoryButton.png">
+    <img id="inventoryButton" onclick="menuOpenClose()" src="assets/sprites/icons/menuButton.png">
+    <div id="dialogueBox"></div>
+    
+    <div id="menu" style="display: none;">
+        <div id="calendary"></div>
+        <div id="horary"></div>
+    </div>
+
+    <script type="module">
+        /*
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB7gM8c7SW7SDzM4vV0JMekjq1eKJ4wbGM",
+            authDomain: "totallifeworldonline.firebaseapp.com",
+            projectId: "totallifeworldonline",
+            storageBucket: "totallifeworldonline.firebasestorage.app",
+            messagingSenderId: "227107237048",
+            appId: "1:227107237048:web:f7e9a160ea94afbda1d84d"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.db = db;
+        window.fb = { doc, setDoc, getDoc, onSnapshot, collection };
+        */
+    </script>
+    <script src="./assets/resources.js"></script>
+    <script src="./assets/entity.js"></script>
+    <script src="./assets/blocks.js"></script>
+    <script src="./assets/items.js"></script>
+    <script src="./assets/world.js"></script>
+    <script src="./main.js"></script>
+    <script src="./assets/ia.js"></script>
+</body>
+</html>
